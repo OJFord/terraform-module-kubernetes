@@ -156,11 +156,6 @@ EOC
       "rm ${local.kubeadm_join_script_file}",
     ]
   }
-
-  provisioner "remote-exec" {
-    when   = "destroy"
-    inline = ["kubeadm reset --force"]
-  }
 }
 
 resource "null_resource" "worker" {
