@@ -30,6 +30,8 @@ EOD
     "/etc/kubernetes/pki/sa.key",
     "/etc/kubernetes/pki/sa.pub",
   ]
+
+  kubectl_taint_cmd = "kubectl --kubeconfig=/etc/kubernetes/admin.conf taint --overwrite node \"$(hostname)\""
 }
 
 resource "null_resource" "cluster" {
@@ -210,4 +212,28 @@ module "kubeconfig" {
     user = local.masters[0].ssh_user
   }
   filename = "/etc/kubernetes/admin.conf"
+}
+
+resource "null_resource" "master_taints" {
+  for_each = local.masters
+
+  depends_on = [
+    null_resource.master,
+  ]
+
+  triggers = {
+    node  = each.value.id
+    taint = each.value.no_schedule
+  }
+
+  connection {
+    host = each.value.ssh_host
+    user = each.value.ssh_user
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "${local.kubectl_taint_cmd} node-role.kubernetes.io/master${each.value.no_schedule ? "=:NoSchedule" : ":NoSchedule-"}",
+    ]
+  }
 }

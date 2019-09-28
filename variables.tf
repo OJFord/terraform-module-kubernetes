@@ -6,9 +6,10 @@ variable "bootstrap_token" {
 variable "masters" {
   description = "Information about the hosts to configure as master nodes"
   type = list(object({
-    id       = string
-    ssh_host = string
-    ssh_user = string
+    id          = string
+    no_schedule = bool
+    ssh_host    = string
+    ssh_user    = string
   }))
 }
 
