@@ -70,7 +70,7 @@ EOC
   }
 
   provisioner "remote-exec" {
-    when = "destroy"
+    when = destroy
     inline = [
       "kubeadm reset --force",
     ]
@@ -199,7 +199,7 @@ EOC
   }
 
   provisioner "remote-exec" {
-    when   = "destroy"
+    when   = destroy
     inline = ["kubeadm reset --force"]
   }
 }

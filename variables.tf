@@ -1,6 +1,6 @@
 variable "bootstrap_token" {
   description = "https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta2#BootstrapToken"
-  type        = "string"
+  type        = string
 }
 
 variable "masters" {
