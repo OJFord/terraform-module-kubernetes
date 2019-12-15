@@ -31,7 +31,7 @@ EOD
     "/etc/kubernetes/pki/sa.pub",
   ]
 
-  kubectl_taint_cmd = "kubectl --kubeconfig=/etc/kubernetes/admin.conf taint --overwrite node \"$(hostname)\""
+  kubectl_taint_cmd = "kubectl --kubeconfig=/etc/kubernetes/admin.conf taint --overwrite node \"$(cat /etc/hostname)\""
 }
 
 resource "null_resource" "cluster" {
@@ -114,8 +114,11 @@ EOC
 
   provisioner "remote-exec" {
     inline = [
-      "cp ${local.ca_cert} /usr/local/share/ca-certificates/k8s-apiserver.crt",
-      "update-ca-certificates",
+      "if grep 'Arch Linux' /usr/lib/os-release; then",
+      "  cp '${local.ca_cert}' /etc/ca-certificates/trust-source/anchors/k8s-apiserver.crt && trust extract-compat",
+      "else",
+      "  cp ${local.ca_cert} /usr/local/share/ca-certificates/k8s-apiserver.crt && update-ca-certificates",
+      "fi",
     ]
   }
 }
