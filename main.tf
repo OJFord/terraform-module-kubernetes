@@ -65,14 +65,8 @@ EOC
 
   provisioner "remote-exec" {
     inline = [
-      "kubeadm init --config=${local.kubeadm_config_file} ${join(" ", var.kubeadm_init_extra_args)}",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    when = destroy
-    inline = [
       "kubeadm reset --force",
+      "kubeadm init --config=${local.kubeadm_config_file} ${join(" ", var.kubeadm_init_extra_args)}",
     ]
   }
 }
@@ -195,15 +189,11 @@ EOC
 
   provisioner "remote-exec" {
     inline = [
+      "kubeadm reset --force",
       "chmod 0100 ${local.kubeadm_join_script_file}",
       "${local.kubeadm_join_script_file}",
       "rm ${local.kubeadm_join_script_file}",
     ]
-  }
-
-  provisioner "remote-exec" {
-    when   = destroy
-    inline = ["kubeadm reset --force"]
   }
 }
 
