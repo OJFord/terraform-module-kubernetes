@@ -151,7 +151,7 @@ EOC
   provisioner "remote-exec" {
     inline = [
       "chmod 0100 ${local.kubeadm_join_script_file}",
-      "${local.kubeadm_join_script_file}",
+      local.kubeadm_join_script_file,
       "rm ${local.kubeadm_join_script_file}",
     ]
   }
@@ -191,7 +191,7 @@ EOC
     inline = [
       "kubeadm reset --force",
       "chmod 0100 ${local.kubeadm_join_script_file}",
-      "${local.kubeadm_join_script_file}",
+      local.kubeadm_join_script_file,
       "rm ${local.kubeadm_join_script_file}",
     ]
   }
